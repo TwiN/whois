@@ -1,7 +1,7 @@
 package whois
 
 import (
-	"io/ioutil"
+	"io"
 	"net"
 	"strings"
 	"time"
@@ -48,7 +48,7 @@ func (c Client) query(whoisServerAddress, domain string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	output, err := ioutil.ReadAll(connection)
+	output, err := io.ReadAll(connection)
 	if err != nil {
 		return "", err
 	}
