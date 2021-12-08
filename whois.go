@@ -34,6 +34,7 @@ func (c Client) Query(domain string) (string, error) {
 		if referOutput, err := c.query(whois+":43", domain); err == nil {
 			return referOutput, nil
 		}
+		return "", err
 	}
 	return output, nil
 }
@@ -44,6 +45,7 @@ func (c Client) query(whoisServerAddress, domain string) (string, error) {
 		return "", err
 	}
 	defer connection.Close()
+	connection.SetDeadline(time.Now().Add(5 * time.Second))
 	_, err = connection.Write([]byte(domain + "\n"))
 	if err != nil {
 		return "", err
