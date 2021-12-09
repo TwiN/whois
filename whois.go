@@ -56,3 +56,39 @@ func (c Client) query(whoisServerAddress, domain string) (string, error) {
 	}
 	return string(output), nil
 }
+
+type Response struct {
+	ExpirationDate time.Time
+	DomainStatuses []string
+	NameServers    []string
+}
+
+// QueryAndParse tries to parse the response from the WHOIS server
+// There is no standardized format for WHOIS responses, so this is an attempt at best.
+//
+// Being the selfish person that I am, I also only parse the fields that I need.
+// If you need more fields, please open an issue or pull request.
+func (c Client) QueryAndParse(domain string) (*Response, error) {
+	text, err := c.Query(domain)
+	if err != nil {
+		return nil, err
+	}
+	response := Response{}
+	for _, line := range strings.Split(text, "\n") {
+		line = strings.TrimSpace(line)
+		valueStartIndex := strings.Index(line, ":")
+		if valueStartIndex == -1 {
+			continue
+		}
+		key := strings.ToLower(strings.TrimSpace(line[:valueStartIndex]))
+		value := strings.TrimSpace(line[valueStartIndex+1:])
+		if response.ExpirationDate.Unix() != 0 && strings.Contains(key, "expir") && strings.Contains(key, "date") {
+			response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+		} else if strings.Contains(key, "domain status") {
+			response.DomainStatuses = append(response.DomainStatuses, value)
+		} else if strings.Contains(key, "name server") {
+			response.NameServers = append(response.NameServers, value)
+		}
+	}
+	return &response, nil
+}
