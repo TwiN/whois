@@ -11,19 +11,23 @@ func TestClient_Query(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			domain:  "example.com",
+			domain:  "name.com",
 			wantErr: false,
 		},
 		{
-			domain:  "example.org",
+			domain:  "name.org",
 			wantErr: false,
 		},
 		{
-			domain:  "twin.sh",
+			domain:  "name.net",
 			wantErr: false,
 		},
 		{
-			domain:  "gatus.io",
+			domain:  "name.sh",
+			wantErr: false,
+		},
+		{
+			domain:  "name.io",
 			wantErr: false,
 		},
 	}
@@ -37,9 +41,10 @@ func TestClient_Query(t *testing.T) {
 			if !scenario.wantErr && err != nil {
 				t.Error("expected no error, got", err.Error())
 			}
-			if !strings.Contains(output, strings.ToUpper(scenario.domain)) {
+			if !strings.Contains(strings.ToLower(output), scenario.domain) {
 				t.Errorf("expected %s in output, got %s", scenario.domain, output)
 			}
+			t.Log(output)
 		})
 	}
 }

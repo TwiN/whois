@@ -46,7 +46,7 @@ func (c Client) query(whoisServerAddress, domain string) (string, error) {
 	}
 	defer connection.Close()
 	connection.SetDeadline(time.Now().Add(5 * time.Second))
-	_, err = connection.Write([]byte(domain + "\n"))
+	_, err = connection.Write([]byte(domain + "\r\n"))
 	if err != nil {
 		return "", err
 	}
