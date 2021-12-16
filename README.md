@@ -5,7 +5,18 @@ It automatically retrieves the appropriate WHOIS server based on the domain's TL
 
 
 ## Usage
-### Query
+### As executable
+To install it:
+```console
+go install github.com/TwiN/whois/cmd/whois@latest
+```
+To run it:
+```console 
+whois example.com
+```
+
+### As library
+#### Query
 If all you want is the text a WHOIS server would return you, you can use the `Query` method of the `whois.Client` type:
 ```go
 package main
@@ -22,7 +33,7 @@ func main() {
 }
 ```
 
-### QueryAndParse
+#### QueryAndParse
 If you want specific pieces of information, you can use the `QueryAndParse` method of the `whois.Client` type:
 ```go
 package main
