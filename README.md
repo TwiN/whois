@@ -16,6 +16,10 @@ whois example.com
 ```
 
 ### As library
+```console
+go get github.com/TwiN/whois
+```
+
 #### Query
 If all you want is the text a WHOIS server would return you, you can use the `Query` method of the `whois.Client` type:
 ```go
