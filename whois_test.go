@@ -35,6 +35,18 @@ func TestClient(t *testing.T) {
 			domain:  "name.dev",
 			wantErr: false,
 		},
+		{
+			domain:  "name.red",
+			wantErr: false,
+		},
+		{
+			domain:  "name.green",
+			wantErr: false,
+		},
+		{
+			domain:  "name.black",
+			wantErr: false,
+		},
 	}
 	for _, scenario := range scenarios {
 		t.Run(scenario.domain+"_Query", func(t *testing.T) {
