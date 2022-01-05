@@ -5,7 +5,7 @@ It automatically retrieves the appropriate WHOIS server based on the domain's TL
 
 
 ## Usage
-### As executable
+### As an executable
 To install it:
 ```console
 go install github.com/TwiN/whois/cmd/whois@latest
@@ -15,7 +15,7 @@ To run it:
 whois example.com
 ```
 
-### As library
+### As a library
 ```console
 go get github.com/TwiN/whois
 ```
