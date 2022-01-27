@@ -1,4 +1,6 @@
 # whois
+![test](https://github.com/TwiN/whois/workflows/test/badge.svg?branch=master)
+
 Lightweight library for retrieving WHOIS information on a domain.
 
 It automatically retrieves the appropriate WHOIS server based on the domain's TLD by first querying IANA.
