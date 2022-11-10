@@ -48,9 +48,10 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 	}
+	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
 		t.Run(scenario.domain+"_Query", func(t *testing.T) {
-			output, err := NewClient().Query(scenario.domain)
+			output, err := client.Query(scenario.domain)
 			if scenario.wantErr && err == nil {
 				t.Error("expected error, got none")
 				t.FailNow()
@@ -64,7 +65,7 @@ func TestClient(t *testing.T) {
 		})
 		time.Sleep(50 * time.Millisecond) // Give the WHOIS servers some breathing room
 		t.Run(scenario.domain+"_QueryAndParse", func(t *testing.T) {
-			response, err := NewClient().QueryAndParse(scenario.domain)
+			response, err := client.QueryAndParse(scenario.domain)
 			if scenario.wantErr && err == nil {
 				t.Error("expected error, got none")
 				t.FailNow()
@@ -79,7 +80,7 @@ func TestClient(t *testing.T) {
 				t.Errorf("expected to have at least one name server")
 			}
 			if len(response.DomainStatuses) == 0 {
-				t.Errorf("expected to have at least one domai status")
+				t.Errorf("expected to have at least one domain status")
 			}
 		})
 		time.Sleep(50 * time.Millisecond) // Give the WHOIS servers some breathing room
