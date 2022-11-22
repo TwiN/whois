@@ -12,6 +12,8 @@ To install it:
 ```console
 go install github.com/TwiN/whois/cmd/whois@latest
 ```
+Alternatively, you can download whois from the [release](https://github.com/TwiN/whois/releases) section, though you'll have to unzip the file first.
+
 To run it:
 ```console 
 whois example.com
