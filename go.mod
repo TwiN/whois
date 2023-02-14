@@ -1,3 +1,3 @@
 module github.com/TwiN/whois
 
-go 1.19
+go 1.20
