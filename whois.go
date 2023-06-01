@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var domainExtensionsWithoutGracePeriod = []string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
+var tldWithoutExpirationDate = []string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -52,8 +52,8 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 	return c
 }
 
-func isDomainExtensionWithoutGracePeriod(e string) bool {
-    for _, a := range domainExtensionsWithoutGracePeriod {
+func doesTLDHaveExpirationDate(e string) bool {
+    for _, a := range tldWithoutExpirationDate {
         if a == e {
             return true
         }
@@ -64,7 +64,7 @@ func isDomainExtensionWithoutGracePeriod(e string) bool {
 func (c *Client) Query(domain string) (string, error) {
 	parts := strings.Split(domain, ".")
 	domainExtension := parts[len(parts)-1]
-	if isDomainExtensionWithoutGracePeriod(domainExtension) {
+	if doesTLDHaveExpirationDate(domainExtension) {
 		return "", errors.New("Domain extension " + domainExtension + " does not have a grace period.")
 	}
 	if c.isCachingReferralWHOISServers {
