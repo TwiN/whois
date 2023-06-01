@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var domainExtensionsWithoutGracePeriod = [11]string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
+var domainExtensionsWithoutGracePeriod = []string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
 
 type Client struct {
 	whoisServerAddress string
