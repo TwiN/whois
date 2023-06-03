@@ -47,6 +47,10 @@ func TestClient(t *testing.T) {
 			domain:  "name.black",
 			wantErr: false,
 		},
+		{
+			domain:  "name.de",
+			wantErr: true,
+		},
 	}
 	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
@@ -56,11 +60,13 @@ func TestClient(t *testing.T) {
 				t.Error("expected error, got none")
 				t.FailNow()
 			}
-			if !scenario.wantErr && err != nil {
-				t.Error("expected no error, got", err.Error())
-			}
-			if !strings.Contains(strings.ToLower(output), scenario.domain) {
-				t.Errorf("expected %s in output, got %s", scenario.domain, output)
+			if !scenario.wantErr {
+				if err != nil {
+					t.Error("expected no error, got", err.Error())
+				}
+				if !strings.Contains(strings.ToLower(output), scenario.domain) {
+					t.Errorf("expected %s in output, got %s", scenario.domain, output)
+				}
 			}
 		})
 		time.Sleep(50 * time.Millisecond) // Give the WHOIS servers some breathing room
@@ -70,17 +76,19 @@ func TestClient(t *testing.T) {
 				t.Error("expected error, got none")
 				t.FailNow()
 			}
-			if !scenario.wantErr && err != nil {
-				t.Error("expected no error, got", err.Error())
-			}
-			if response.ExpirationDate.Unix() == 0 {
-				t.Errorf("expected to have an expiry date")
-			}
-			if len(response.NameServers) == 0 {
-				t.Errorf("expected to have at least one name server")
-			}
-			if len(response.DomainStatuses) == 0 {
-				t.Errorf("expected to have at least one domain status")
+			if !scenario.wantErr {
+				if err != nil {
+					t.Error("expected no error, got", err.Error())
+				}
+				if response.ExpirationDate.Unix() == 0 {
+					t.Errorf("expected to have an expiry date")
+				}
+				if len(response.NameServers) == 0 {
+					t.Errorf("expected to have at least one name server")
+				}
+				if len(response.DomainStatuses) == 0 {
+					t.Errorf("expected to have at least one domain status")
+				}
 			}
 		})
 		time.Sleep(50 * time.Millisecond) // Give the WHOIS servers some breathing room

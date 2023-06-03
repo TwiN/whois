@@ -1,6 +1,7 @@
 package whois
 
 import (
+	"errors"
 	"io"
 	"net"
 	"strings"
@@ -10,6 +11,8 @@ import (
 const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
+
+var tldWithoutExpirationDate = []string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -49,14 +52,27 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 	return c
 }
 
+func doesTLDHaveExpirationDate(e string) bool {
+    for _, a := range tldWithoutExpirationDate {
+        if a == e {
+            return true
+        }
+    }
+    return false
+}
+
 func (c *Client) Query(domain string) (string, error) {
 	parts := strings.Split(domain, ".")
+	domainExtension := parts[len(parts)-1]
+	if doesTLDHaveExpirationDate(domainExtension) {
+		return "", errors.New("Domain extension " + domainExtension + " does not have a grace period.")
+	}
 	if c.isCachingReferralWHOISServers {
 		if cachedWHOISServer, ok := c.referralWHOISServersCache[domain]; ok {
 			return c.query(cachedWHOISServer, domain)
 		}
 	}
-	output, err := c.query(c.whoisServerAddress, parts[len(parts)-1])
+	output, err := c.query(c.whoisServerAddress, domainExtension)
 	if err != nil {
 		return "", err
 	}
