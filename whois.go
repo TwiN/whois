@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at","be","ch","co.at","com.br","or.at","de","fr","me","mx","nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "me", "mx", "nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -53,12 +53,12 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 }
 
 func doesTLDHaveExpirationDate(e string) bool {
-    for _, a := range tldWithoutExpirationDate {
-        if a == e {
-            return true
-        }
-    }
-    return false
+	for _, a := range tldWithoutExpirationDate {
+		if a == e {
+			return true
+		}
+	}
+	return false
 }
 
 func (c *Client) Query(domain string) (string, error) {
@@ -135,7 +135,15 @@ func (c Client) QueryAndParse(domain string) (*Response, error) {
 		key := strings.ToLower(strings.TrimSpace(line[:valueStartIndex]))
 		value := strings.TrimSpace(line[valueStartIndex+1:])
 		if response.ExpirationDate.Unix() != 0 && strings.Contains(key, "expir") && strings.Contains(key, "date") {
-			response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+			switch {
+			case strings.HasSuffix(domain, ".br"):
+				response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
+			case strings.HasSuffix(domain, "co.ua"),
+				strings.HasSuffix(domain, "pp.ua"):
+				response.ExpirationDate, _ = time.Parse("02-Jan-2006 03:04:05 MST", strings.ToUpper(value))
+			default:
+				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+			}
 		} else if strings.Contains(key, "domain status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
 		} else if strings.Contains(key, "name server") {
