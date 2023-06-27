@@ -47,6 +47,8 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 			"org":   "whois.publicinterestregistry.org",
 			"red":   "whois.nic.red",
 			"sh":    "whois.nic.sh",
+			"co.ua": "whois.co.ua",
+			"pp.ua": "whois.pp.ua",
 		}
 	}
 	return c
@@ -144,9 +146,9 @@ func (c Client) QueryAndParse(domain string) (*Response, error) {
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
-		} else if strings.Contains(key, "domain status") {
+		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
-		} else if strings.Contains(key, "name server") {
+		} else if (strings.Contains(key, "name server") || strings.Contains(key, "nserver")) {
 			response.NameServers = append(response.NameServers, value)
 		}
 	}
