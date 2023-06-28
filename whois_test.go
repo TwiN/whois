@@ -51,6 +51,18 @@ func TestClient(t *testing.T) {
 			domain:  "name.de",
 			wantErr: true,
 		},
+		{
+			domain:  "google.com.br",
+			wantErr: false,
+		},
+		{
+			domain:  "xyz.co.ua",
+			wantErr: false,
+		},
+		{
+			domain:  "xyz.pp.ua",
+			wantErr: false,
+		},
 	}
 	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
