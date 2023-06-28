@@ -64,7 +64,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 	}
-	client := NewClient().WithReferralCache(false)
+	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
 		t.Run(scenario.domain+"_Query", func(t *testing.T) {
 			output, err := client.Query(scenario.domain)
