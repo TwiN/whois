@@ -100,7 +100,7 @@ func (c *Client) Query(domain string) (string, error) {
 	return output, nil
 }
 
-func (c Client) query(whoisServerAddress, domain string) (string, error) {
+func (c *Client) query(whoisServerAddress, domain string) (string, error) {
 	connection, err := net.DialTimeout("tcp", whoisServerAddress, 10*time.Second)
 	if err != nil {
 		return "", err
@@ -129,7 +129,7 @@ type Response struct {
 //
 // Being the selfish person that I am, I also only parse the fields that I need.
 // If you need more fields, please open an issue or pull request.
-func (c Client) QueryAndParse(domain string) (*Response, error) {
+func (c *Client) QueryAndParse(domain string) (*Response, error) {
 	text, err := c.Query(domain)
 	if err != nil {
 		return nil, err
