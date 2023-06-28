@@ -47,8 +47,6 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 			"org":   "whois.publicinterestregistry.org",
 			"red":   "whois.nic.red",
 			"sh":    "whois.nic.sh",
-			"co.ua": "whois.co.ua",
-			"pp.ua": "whois.pp.ua",
 		}
 	}
 	return c
