@@ -52,19 +52,19 @@ func TestClient(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			domain:  "google.com.br",
+			domain:  "google.com.br", // name.com.br is handled weirdly by whois.registro.br, so we'll use this instead
 			wantErr: false,
 		},
 		{
-			domain:  "xyz.co.ua",
+			domain:  "name.co.ua",
 			wantErr: false,
 		},
 		{
-			domain:  "xyz.pp.ua",
+			domain:  "name.pp.ua",
 			wantErr: false,
 		},
 	}
-	client := NewClient().WithReferralCache(true)
+	client := NewClient().WithReferralCache(false)
 	for _, scenario := range scenarios {
 		t.Run(scenario.domain+"_Query", func(t *testing.T) {
 			output, err := client.Query(scenario.domain)

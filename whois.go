@@ -47,8 +47,6 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 			"org":   "whois.publicinterestregistry.org",
 			"red":   "whois.nic.red",
 			"sh":    "whois.nic.sh",
-			"co.ua": "whois.ua", 
-			"pp.ua": "whois.ua",
 		}
 	}
 	return c
@@ -74,7 +72,16 @@ func (c *Client) Query(domain string) (string, error) {
 			return c.query(cachedWHOISServer, domain)
 		}
 	}
-	output, err := c.query(c.whoisServerAddress, domainExtension)
+	var output string
+	var err error
+	if domainExtension == "ua" {
+		if len(parts) > 2 && len(parts[len(parts)-2]) < 4 {
+			domainExtension = parts[len(parts)-2] + "." + domainExtension
+		}
+		output, err = c.query("whois."+domainExtension+":43", domain)
+	} else {
+		output, err = c.query(c.whoisServerAddress, domainExtension)
+	}
 	if err != nil {
 		return "", err
 	}
@@ -140,15 +147,14 @@ func (c Client) QueryAndParse(domain string) (*Response, error) {
 			switch {
 			case strings.HasSuffix(domain, ".br"):
 				response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
-			case strings.HasSuffix(domain, "co.ua"),
-				strings.HasSuffix(domain, "pp.ua"):
+			case strings.HasSuffix(domain, "co.ua"), strings.HasSuffix(domain, "pp.ua"):
 				response.ExpirationDate, _ = time.Parse("02-Jan-2006 03:04:05 MST", strings.ToUpper(value))
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
 		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
-		} else if (strings.Contains(key, "name server") || strings.Contains(key, "nserver")) {
+		} else if strings.Contains(key, "name server") || strings.Contains(key, "nserver") {
 			response.NameServers = append(response.NameServers, value)
 		}
 	}
