@@ -44,7 +44,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.black",
+			domain:  "nic.black", //name.black is restricted, so we'll use this instead
 			wantErr: false,
 		},
 		{
@@ -52,7 +52,7 @@ func TestClient(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			domain:  "google.com.br", // name.com.br is handled weirdly by whois.registro.br, so we'll use this instead
+			domain:  "google.com.br", //name.com.br is restricted, so we'll use this instead
 			wantErr: false,
 		},
 		{
@@ -92,7 +92,7 @@ func TestClient(t *testing.T) {
 				if err != nil {
 					t.Error("expected no error, got", err.Error())
 				}
-				if response.ExpirationDate.Unix() == 0 {
+				if response.ExpirationDate.IsZero() {
 					t.Errorf("expected to have an expiry date")
 				}
 				if len(response.NameServers) == 0 {
