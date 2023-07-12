@@ -44,7 +44,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.black",
+			domain:  "color.black",
 			wantErr: false,
 		},
 		{
