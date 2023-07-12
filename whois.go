@@ -143,14 +143,21 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 		}
 		key := strings.ToLower(strings.TrimSpace(line[:valueStartIndex]))
 		value := strings.TrimSpace(line[valueStartIndex+1:])
-		if response.ExpirationDate.Unix() != 0 && strings.Contains(key, "expir") && strings.Contains(key, "date") {
-			switch {
-			case strings.HasSuffix(domain, ".br"):
-				response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
-			case strings.HasSuffix(domain, "co.ua"), strings.HasSuffix(domain, "pp.ua"):
-				response.ExpirationDate, _ = time.Parse("02-Jan-2006 03:04:05 MST", strings.ToUpper(value))
-			default:
-				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+		if strings.Contains(key, "expir") {
+			if strings.Contains(key, "date") {
+				switch {
+				case strings.HasSuffix(domain, ".co.ua"), strings.HasSuffix(domain, ".pp.ua"):
+					response.ExpirationDate, _ = time.Parse("02-Jan-2006 15:04:05 MST", strings.ToUpper(value))
+				default:
+					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+				}
+			} else {
+				switch {
+				case strings.HasSuffix(domain, ".br"):
+					response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
+				default:
+					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+				}
 			}
 		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
