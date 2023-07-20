@@ -65,7 +65,7 @@ func (c *Client) Query(domain string) (string, error) {
 	parts := strings.Split(domain, ".")
 	domainExtension := parts[len(parts)-1]
 	if doesTLDHaveExpirationDate(domainExtension) {
-		return "", errors.New("Domain extension " + domainExtension + " does not have a grace period.")
+		return "", errors.New("domain extension " + domainExtension + " does not have a grace period.")
 	}
 	if c.isCachingReferralWHOISServers {
 		if cachedWHOISServer, ok := c.referralWHOISServersCache[domain]; ok {
