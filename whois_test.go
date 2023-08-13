@@ -48,6 +48,10 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			domain:  "name.cn",
+			wantErr: false,
+		},
+		{
 			domain:  "name.de",
 			wantErr: true,
 		},
@@ -92,8 +96,8 @@ func TestClient(t *testing.T) {
 				if err != nil {
 					t.Error("expected no error, got", err.Error())
 				}
-				if response.ExpirationDate.Unix() == 0 {
-					t.Errorf("expected to have an expiry date")
+				if response.ExpirationDate.Unix() <= 0 {
+					t.Error("expected to have a valid expiry date, got", response.ExpirationDate.Unix())
 				}
 				if len(response.NameServers) == 0 {
 					t.Errorf("expected to have at least one name server")
