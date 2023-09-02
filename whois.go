@@ -148,6 +148,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				switch {
 				case strings.HasSuffix(domain, ".co.ua"), strings.HasSuffix(domain, ".pp.ua"):
 					response.ExpirationDate, _ = time.Parse("02-Jan-2006 15:04:05 MST", strings.ToUpper(value))
+				case strings.HasSuffix(domain, ".uk"):
+					response.ExpirationDate, _ = time.Parse("02-Jan-2006", strings.ToUpper(value))
 				default:
 					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 				}
