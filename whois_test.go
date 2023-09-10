@@ -72,6 +72,10 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			domain:  "name.im",
+			wantErr: false,
+		},
+		{
 			domain:  "name.uk",
 			wantErr: false,
 		},
@@ -106,16 +110,16 @@ func TestClient(t *testing.T) {
 			}
 			if !scenario.wantErr {
 				if err != nil {
-					t.Error("expected no error, got", err.Error())
+					t.Error("expected no error, got", err.Error(), "for domain", scenario.domain)
 				}
 				if response.ExpirationDate.Unix() <= 0 {
-					t.Error("expected to have a valid expiry date, got", response.ExpirationDate.Unix())
+					t.Error("expected to have a valid expiry date, got", response.ExpirationDate.Unix(), "for domain", scenario.domain)
 				}
 				if len(response.NameServers) == 0 {
-					t.Errorf("expected to have at least one name server")
+					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				if len(response.DomainStatuses) == 0 {
-					t.Errorf("expected to have at least one domain status")
+				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") {
+					t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
 				}
 			}
 		})
