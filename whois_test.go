@@ -83,6 +83,14 @@ func TestClient(t *testing.T) {
 			domain:  "dot.scot", // name.scot not registered
 			wantErr: false,
 		},
+		{
+			domain:  "name.ru", // expiration date in `paid-till` field
+			wantErr: false,
+		},
+		{
+			domain:  "register.su", // expiration date in `paid-till` field
+			wantErr: false,
+		},
 	}
 	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
