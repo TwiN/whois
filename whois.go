@@ -170,8 +170,18 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 				}
 			}
+		} else if key == "paid-till" {
+			// example for ru/su domains -> paid-till: 2024-05-26T21:00:00Z
+			if strings.HasSuffix(domain, ".ru") || strings.HasSuffix(domain, ".su") {
+				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+			}
 		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
+		} else if key == "state" {
+			// example for ru/su domains -> state: DELEGATED, VERIFIED
+			if strings.HasSuffix(domain, ".ru") || strings.HasSuffix(domain, ".su") {
+				response.DomainStatuses = strings.Split(value, ", ")
+			}
 		} else if strings.Contains(key, "name server") || strings.Contains(key, "nserver") {
 			response.NameServers = append(response.NameServers, value)
 		}
