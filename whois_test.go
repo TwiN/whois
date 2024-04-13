@@ -91,6 +91,10 @@ func TestClient(t *testing.T) {
 			domain:  "register.su", // expiration date in `paid-till` field
 			wantErr: false,
 		},
+		{
+			domain:  "nic.mx",
+			wantErr: false,
+		},
 	}
 	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
@@ -126,7 +130,7 @@ func TestClient(t *testing.T) {
 				if len(response.NameServers) == 0 {
 					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") {
+				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") {
 					t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
 				}
 			}
