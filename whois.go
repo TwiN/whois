@@ -146,32 +146,27 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 		key := strings.ToLower(strings.TrimSpace(line[:valueStartIndex]))
 		value := strings.TrimSpace(line[valueStartIndex+1:])
 		if strings.Contains(key, "expir") {
-			if strings.Contains(key, "date") {
-				switch {
-				case strings.HasSuffix(domain, ".co.ua"), strings.HasSuffix(domain, ".pp.ua"):
-					response.ExpirationDate, _ = time.Parse("02-Jan-2006 15:04:05 MST", strings.ToUpper(value))
-				case strings.HasSuffix(domain, ".uk"):
-					response.ExpirationDate, _ = time.Parse("02-Jan-2006", strings.ToUpper(value))
-				case strings.HasSuffix(domain, ".im"):
-					response.ExpirationDate, _ = time.Parse("02/01/2006 15:04:05", strings.ToUpper(value))
-				case strings.HasSuffix(domain, ".scot"):
-					if !strings.Contains(key, "registrar") {
-						response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
-					}
-				case strings.HasSuffix(domain, ".mx"):
-					response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
-				default:
+			switch {
+			case strings.HasSuffix(domain, ".pp.ua"):
+				response.ExpirationDate, _ = time.Parse("02-Jan-2006 15:04:05 MST", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".ua"):
+				response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05Z07", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".uk"):
+				response.ExpirationDate, _ = time.Parse("02-Jan-2006", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".im"):
+				response.ExpirationDate, _ = time.Parse("02/01/2006 15:04:05", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".scot"):
+				if !strings.Contains(key, "registrar") {
 					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 				}
-			} else {
-				switch {
-				case strings.HasSuffix(domain, ".br"):
-					response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
-				case strings.HasSuffix(domain, ".cn"):
-					response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05", strings.ToUpper(value))
-				default:
-					response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
-				}
+			case strings.HasSuffix(domain, ".br"):
+				response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".cn"):
+				response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05", strings.ToUpper(value))
+      case strings.HasSuffix(domain, ".mx"):
+				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
+			default:
+				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
 		} else if key == "paid-till" {
 			// example for ru/su domains -> paid-till: 2024-05-26T21:00:00Z
