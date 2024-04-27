@@ -60,7 +60,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.co.ua",
+			domain:  "name.ua",
 			wantErr: false,
 		},
 		{
