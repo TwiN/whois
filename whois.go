@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "me", "mx", "nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "me", "nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -75,12 +75,13 @@ func (c *Client) Query(domain string) (string, error) {
 	}
 	var output string
 	var err error
-	if domainExtension == "ua" {
+	switch domainExtension {
+	case "ua", "mx":
 		if len(parts) > 2 && len(parts[len(parts)-2]) < 4 {
 			domainExtension = parts[len(parts)-2] + "." + domainExtension
 		}
 		output, err = c.query("whois."+domainExtension+":43", domain)
-	} else {
+	default:
 		output, err = c.query(c.whoisServerAddress, domainExtension)
 	}
 	if err != nil {
@@ -162,6 +163,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse("20060102", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".cn"):
 				response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05", strings.ToUpper(value))
+      case strings.HasSuffix(domain, ".mx"):
+				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
