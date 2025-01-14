@@ -1,5 +1,5 @@
 # whois
-![test](https://github.com/TwiN/whois/workflows/test/badge.svg?branch=master)
+![test](https://github.com/TwiN/whois/actions/workflows/test.yml/badge.svg)
 
 Lightweight library for retrieving WHOIS information on a domain.
 
