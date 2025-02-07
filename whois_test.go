@@ -88,6 +88,14 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			domain:  "name.cz",
+			wantErr: false,
+		},
+		{
+			domain:  "name.me",
+			wantErr: false,
+		},		
+		{
 			domain:  "register.su", // expiration date in `paid-till` field
 			wantErr: false,
 		},

@@ -12,11 +12,10 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "me", "nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "nl"}
 
 type Client struct {
 	whoisServerAddress string
-
 	isCachingReferralWHOISServers bool
 	referralWHOISServersCache     map[string]string
 }
@@ -28,15 +27,9 @@ func NewClient() *Client {
 	}
 }
 
-// WithReferralCache allows you to enable or disable the referral WHOIS server cache.
-// While ianaWHOISServerAddress is the "entry point" for WHOIS queries, it sometimes has
-// availability issues. One way to mitigate this is to cache the referral WHOIS server.
-//
-// This is disabled by default
 func (c *Client) WithReferralCache(enabled bool) *Client {
 	c.isCachingReferralWHOISServers = enabled
 	if enabled {
-		// We'll set a couple of common ones right away to avoid unnecessary queries
 		c.referralWHOISServersCache = map[string]string{
 			"com":   "whois.verisign-grs.com",
 			"black": "whois.nic.black",
@@ -127,11 +120,6 @@ type Response struct {
 	NameServers    []string
 }
 
-// QueryAndParse tries to parse the response from the WHOIS server
-// There is no standardized format for WHOIS responses, so this is an attempt at best.
-//
-// Being the selfish person that I am, I also only parse the fields that I need.
-// If you need more fields, please open an issue or pull request.
 func (c *Client) QueryAndParse(domain string) (*Response, error) {
 	text, err := c.Query(domain)
 	if err != nil {
@@ -146,8 +134,11 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 		}
 		key := strings.ToLower(strings.TrimSpace(line[:valueStartIndex]))
 		value := strings.TrimSpace(line[valueStartIndex+1:])
+
 		if strings.Contains(key, "expir") {
 			switch {
+			case strings.HasSuffix(domain, ".me"):
+				response.ExpirationDate, _ = time.Parse("2006-01-02T15:04:05Z", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".pp.ua"):
 				response.ExpirationDate, _ = time.Parse("02-Jan-2006 15:04:05 MST", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".ua"):
@@ -156,8 +147,6 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse("02-Jan-2006", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".cz"):
 				response.ExpirationDate, _ = time.Parse("02.01.2006", strings.ToUpper(value))
-			case strings.HasSuffix(domain, ".me"):
-				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".im"):
 				response.ExpirationDate, _ = time.Parse("02/01/2006 15:04:05", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".scot"):
@@ -173,21 +162,26 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
-		} else if key == "paid-till" {
-			// example for ru/su domains -> paid-till: 2024-05-26T21:00:00Z
+		} else if key == "paid-till" || key == "state" || key == "status" {
 			if strings.HasSuffix(domain, ".ru") || strings.HasSuffix(domain, ".su") {
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
-		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
-		} else if key == "state" {
-			// example for ru/su domains -> state: DELEGATED, VERIFIED
-			if strings.HasSuffix(domain, ".ru") || strings.HasSuffix(domain, ".su") {
-				response.DomainStatuses = strings.Split(value, ", ")
-			}
-		} else if strings.Contains(key, "name server") || strings.Contains(key, "nserver") {
+		} else if strings.Contains(key, "nserver") || strings.Contains(key, "name server") {
 			response.NameServers = append(response.NameServers, value)
 		}
 	}
+	if len(response.DomainStatuses) == 0 {
+		response.DomainStatuses = append(response.DomainStatuses, "No domain status found")
+	}
+	if len(response.NameServers) == 0 {
+		response.NameServers = append(response.NameServers, "No name servers found")
+	}
+
 	return &response, nil
 }
+
+
+
+
+
