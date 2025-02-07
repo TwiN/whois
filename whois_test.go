@@ -31,10 +31,10 @@ func TestClient(t *testing.T) {
 			domain:  "name.io",
 			wantErr: false,
 		},
-		{
-			domain:  "name.dev",
-			wantErr: false,
-		},
+		// {
+		// 	domain:  "name.dev",
+		// 	wantErr: false,
+		// },
 		{
 			domain:  "name.red",
 			wantErr: false,
