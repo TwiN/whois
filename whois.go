@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr","nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -188,7 +188,6 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 		} else if strings.Contains(key, "name server") || strings.Contains(key, "nserver") {
 			response.NameServers = append(response.NameServers, value)
 		}
-
 	}
 	return &response, nil
 }
