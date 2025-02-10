@@ -32,7 +32,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.dev",
+			domain:  "get.dev",
 			wantErr: false,
 		},
 		{
