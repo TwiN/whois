@@ -138,9 +138,6 @@ func TestClient(t *testing.T) {
 				if len(response.NameServers) == 0 {
 					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				// if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") {
-				// 	t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
-				// }
 				if len(response.DomainStatuses) == 0 {
 					// Skipping domain status check for .cz because WHOIS for .cz domains
 					// does not return a status field, which causes the test to fail.
