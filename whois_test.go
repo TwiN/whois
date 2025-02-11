@@ -32,7 +32,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.dev",
+			domain:  "get.dev",
 			wantErr: false,
 		},
 		{
@@ -72,6 +72,14 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
+			domain:  "name.cz",
+			wantErr: false,
+		},
+		{
+			domain:  "name.me",
+			wantErr: false,
+		},
+		{
 			domain:  "name.im",
 			wantErr: false,
 		},
@@ -85,14 +93,6 @@ func TestClient(t *testing.T) {
 		},
 		{
 			domain:  "name.ru", // expiration date in `paid-till` field
-			wantErr: false,
-		},
-		{
-			domain:  "name.cz",
-			wantErr: false,
-		},
-		{
-			domain:  "name.me",
 			wantErr: false,
 		},
 		{
@@ -138,19 +138,9 @@ func TestClient(t *testing.T) {
 				if len(response.NameServers) == 0 {
 					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				// if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") {
-				// 	t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
-				// }
-				if len(response.DomainStatuses) == 0 {
-					// Skipping domain status check for .cz because WHOIS for .cz domains
-					// does not return a status field, which causes the test to fail.
-					if strings.HasSuffix(scenario.domain, ".cz") {
-						t.Logf("Skipping domain status check for .cz: %s", scenario.domain)
-					} else if !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") {
-						t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
-					}
+				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") && !strings.HasSuffix(scenario.domain, ".cz") {
+					t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
 				}
-
 			}
 		})
 		time.Sleep(50 * time.Millisecond) // Give the WHOIS servers some breathing room
