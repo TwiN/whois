@@ -32,7 +32,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.dev",
+			domain:  "get.dev",
 			wantErr: false,
 		},
 		{
@@ -69,6 +69,14 @@ func TestClient(t *testing.T) {
 		},
 		{
 			domain:  "name.co.uk",
+			wantErr: false,
+		},
+		{
+			domain:  "name.cz",
+			wantErr: false,
+		},
+		{
+			domain:  "name.me",
 			wantErr: false,
 		},
 		{
@@ -130,7 +138,7 @@ func TestClient(t *testing.T) {
 				if len(response.NameServers) == 0 {
 					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") {
+				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") && !strings.HasSuffix(scenario.domain, ".cz") {
 					t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
 				}
 			}

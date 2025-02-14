@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "me", "nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "nl"}
 
 type Client struct {
 	whoisServerAddress string
@@ -154,6 +154,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05Z07", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".uk"):
 				response.ExpirationDate, _ = time.Parse("02-Jan-2006", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".cz"):
+				response.ExpirationDate, _ = time.Parse("02.01.2006", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".im"):
 				response.ExpirationDate, _ = time.Parse("02/01/2006 15:04:05", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".scot"):
