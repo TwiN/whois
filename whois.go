@@ -12,7 +12,7 @@ const (
 	ianaWHOISServerAddress = "whois.iana.org:43"
 )
 
-var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "com.br", "or.at", "de", "fr", "nl"}
+var tldWithoutExpirationDate = []string{"at", "be", "ch", "co.at", "de", "eu", "nl", "or.at"}
 
 type Client struct {
 	whoisServerAddress string
