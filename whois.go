@@ -40,7 +40,6 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 		c.referralWHOISServersCache = map[string]string{
 			"com":   "whois.verisign-grs.com",
 			"black": "whois.nic.black",
-			"dev":   "whois.nic.google",
 			"green": "whois.nic.green",
 			"io":    "whois.nic.io",
 			"net":   "whois.verisign-grs.com",
@@ -48,7 +47,7 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 			"red":   "whois.nic.red",
 			"sh":    "whois.nic.sh",
 			"uk":    "whois.nic.uk",
-			"mx":    "whois.nic.mx",
+			"mx":    "whois.mx",
 		}
 	}
 	return c
@@ -70,8 +69,8 @@ func (c *Client) Query(domain string) (string, error) {
 		return "", errors.New("domain extension " + domainExtension + " does not have a grace period.")
 	}
 	if c.isCachingReferralWHOISServers {
-		if cachedWHOISServer, ok := c.referralWHOISServersCache[domain]; ok {
-			return c.query(cachedWHOISServer, domain)
+		if cachedWHOISServer, ok := c.referralWHOISServersCache[domainExtension]; ok {
+			return c.query(cachedWHOISServer+":43", domain)
 		}
 	}
 	var output string
@@ -94,7 +93,7 @@ func (c *Client) Query(domain string) (string, error) {
 		whois := strings.TrimSpace(output[startIndex:endIndex])
 		if referOutput, err := c.query(whois+":43", domain); err == nil {
 			if c.isCachingReferralWHOISServers {
-				c.referralWHOISServersCache[domain] = whois + ":43"
+				c.referralWHOISServersCache[domainExtension] = whois
 			}
 			return referOutput, nil
 		}

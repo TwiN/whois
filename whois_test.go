@@ -32,10 +32,6 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "get.dev",
-			wantErr: false,
-		},
-		{
 			domain:  "name.red",
 			wantErr: false,
 		},
@@ -53,6 +49,10 @@ func TestClient(t *testing.T) {
 		},
 		{
 			domain:  "name.de",
+			wantErr: true,
+		},
+		{
+			domain:  "name.eu",
 			wantErr: true,
 		},
 		{
