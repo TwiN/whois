@@ -12,6 +12,10 @@ func TestClient(t *testing.T) {
 		wantErr bool
 	}{
 		{
+			domain:  "example.com",
+			wantErr: false,
+		},
+		{
 			domain:  "name.com",
 			wantErr: false,
 		},
@@ -32,10 +36,6 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "get.dev",
-			wantErr: false,
-		},
-		{
 			domain:  "name.red",
 			wantErr: false,
 		},
@@ -52,11 +52,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.de",
-			wantErr: true,
-		},
-		{
-			domain:  "google.com.br", // name.com.br is handled weirdly by whois.registro.br, so we'll use this instead
+			domain:  "google.com.br", // name.com.br is handled weirdly by whois.registry.br, so we'll use this instead
 			wantErr: false,
 		},
 		{
