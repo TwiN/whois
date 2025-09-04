@@ -36,18 +36,6 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "name.red",
-			wantErr: false,
-		},
-		{
-			domain:  "name.green",
-			wantErr: false,
-		},
-		{
-			domain:  "color.black",
-			wantErr: false,
-		},
-		{
 			domain:  "name.cn",
 			wantErr: false,
 		},

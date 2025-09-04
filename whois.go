@@ -38,17 +38,14 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 	if enabled {
 		// We'll set a couple of common ones right away to avoid unnecessary queries
 		c.referralWHOISServersCache = map[string]string{
-			"com":   "whois.verisign-grs.com",
-			"black": "whois.nic.black",
-			"green": "whois.nic.green",
-			"io":    "whois.nic.io",
-			"net":   "whois.verisign-grs.com",
-			"org":   "whois.publicinterestregistry.org",
-			"red":   "whois.nic.red",
-			"sh":    "whois.nic.sh",
-			"uk":    "whois.nic.uk",
-			"mx":    "whois.mx",
-			"ro":    "whois.rotld.ro",
+			"com": "whois.verisign-grs.com",
+			"io":  "whois.nic.io",
+			"net": "whois.verisign-grs.com",
+			"org": "whois.publicinterestregistry.org",
+			"sh":  "whois.nic.sh",
+			"uk":  "whois.nic.uk",
+			"mx":  "whois.mx",
+			"ro":  "whois.rotld.ro",
 		}
 	}
 	return c

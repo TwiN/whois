@@ -1,6 +1,8 @@
 # whois
 ![test](https://github.com/TwiN/whois/actions/workflows/test.yml/badge.svg)
 
+> **WARNING**: WHOIS has been deprecated in favor of RDAP. Some TLDs may have already removed their WHOIS server.
+
 Lightweight library for retrieving WHOIS information on a domain.
 
 It automatically retrieves the appropriate WHOIS server based on the domain's TLD by first querying IANA.
