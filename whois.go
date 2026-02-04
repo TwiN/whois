@@ -46,6 +46,7 @@ func (c *Client) WithReferralCache(enabled bool) *Client {
 			"uk":  "whois.nic.uk",
 			"mx":  "whois.mx",
 			"ro":  "whois.rotld.ro",
+			"kr":  "whois.krnic.net",
 		}
 	}
 	return c
@@ -167,6 +168,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".ro"):
 				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".kr"):
+				response.ExpirationDate, _ = time.Parse("2006. 01. 02.", strings.ToUpper(value))
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}

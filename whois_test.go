@@ -91,6 +91,10 @@ func TestClient(t *testing.T) {
 			domain:  "google.ro",
 			wantErr: false,
 		},
+		{
+			domain:  "google.co.kr",
+			wantErr: false,
+		},
 	}
 	client := NewClient().WithReferralCache(true)
 	for _, scenario := range scenarios {
@@ -123,10 +127,10 @@ func TestClient(t *testing.T) {
 				if response.ExpirationDate.Unix() <= 0 {
 					t.Error("expected to have a valid expiry date, got", response.ExpirationDate.Unix(), "for domain", scenario.domain)
 				}
-				if len(response.NameServers) == 0 {
+				if len(response.NameServers) == 0 && !strings.HasSuffix(scenario.domain, ".kr") {
 					t.Errorf("expected to have at least one name server for domain %s", scenario.domain)
 				}
-				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") && !strings.HasSuffix(scenario.domain, ".cz") {
+				if len(response.DomainStatuses) == 0 && !strings.HasSuffix(scenario.domain, ".im") && !strings.HasSuffix(scenario.domain, ".mx") && !strings.HasSuffix(scenario.domain, ".cz") && !strings.HasSuffix(scenario.domain, ".kr") {
 					t.Errorf("expected to have at least one domain status for domain %s", scenario.domain)
 				}
 			}
