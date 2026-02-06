@@ -166,6 +166,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse("2006-01-02 15:04:05", strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".mx"):
 				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".lt"):
+				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".ro"):
 				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".kr"):

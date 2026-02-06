@@ -88,7 +88,7 @@ func TestClient(t *testing.T) {
 			wantErr: false,
 		},
 		{
-			domain:  "google.ro",
+			domain:  "google.lt",
 			wantErr: false,
 		},
 		{
