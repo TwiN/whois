@@ -172,6 +172,8 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 				response.ExpirationDate, _ = time.Parse(time.DateOnly, strings.ToUpper(value))
 			case strings.HasSuffix(domain, ".kr"):
 				response.ExpirationDate, _ = time.Parse("2006. 01. 02.", strings.ToUpper(value))
+			case strings.HasSuffix(domain, ".pl"):
+				// skip `option expiration date` (expiry of a registration option), the domain's is in `renewal date`
 			default:
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
 			}
@@ -179,6 +181,11 @@ func (c *Client) QueryAndParse(domain string) (*Response, error) {
 			// example for ru/su domains -> paid-till: 2024-05-26T21:00:00Z
 			if strings.HasSuffix(domain, ".ru") || strings.HasSuffix(domain, ".su") {
 				response.ExpirationDate, _ = time.Parse(time.RFC3339, strings.ToUpper(value))
+			}
+		} else if key == "renewal date" {
+			// example for pl domains -> renewal date: 2027.02.13 14:41:58
+			if strings.HasSuffix(domain, ".pl") {
+				response.ExpirationDate, _ = time.Parse("2006.01.02 15:04:05", value)
 			}
 		} else if strings.Contains(key, "status") {
 			response.DomainStatuses = append(response.DomainStatuses, value)
